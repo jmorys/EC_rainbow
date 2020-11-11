@@ -1,0 +1,74 @@
+---
+title: "Survival_expansion"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(igraph)
+library(ggplot2)
+library(ggraph)
+library(magrittr)
+library(reshape2)
+library(ggpubr)
+source('~/studia/zaklad/EC_rainbow/model_creation/graph_analysis_tools.R', echo = TRUE)
+graphs <- readRDS("~/studia/zaklad/EC_rainbow/model_creation/graphs.rds")
+```
+
+Najpierw redukcja zbendych polaczen, a potem zasymulowanie komorek dla grafu (119 wierzcholkow). I kod do funkcji.
+
+```{r}
+simulate_expansion_of_fraction <- function(graph, survivor_fraction=0.3, expanding_fraction=0.1){
+  nlen <- length(V(graph))
+  surv_nodes <- sample(1:nlen, ceiling(nlen*survivor_fraction))
+  survivors <- rep(100000, nlen)
+  survivors[surv_nodes] <- surv_nodes
+  ori_nodes <- sample(surv_nodes, ceiling(length(surv_nodes)*expanding_fraction))
+  oris <- rep(100000, nlen)
+  oris[ori_nodes] <- ori_nodes
+  oris <- as.factor(oris)
+  wframe <- igraph::distances(graph, v = ori_nodes, weights = (2 - get.edge.attribute(graph, "weight")))
+  expanded <- apply(wframe,2, function(x){
+    order(x)[1]
+  })
+  final <- expanded
+  non_exp <- surv_nodes[!surv_nodes %in% ori_nodes]
+  final[non_exp] <- max(expanded) + (1:length(non_exp))
+  list(survivors = survivors, origins = oris, expanded = expanded, final = final)
+}
+
+mygraph <- graphs[[24]]
+redlist <- reduce_edges_splitting(mygraph)
+mygraph <- delete.edges(mygraph, which(redlist > 0))
+expan <- simulate_expansion_of_fraction(mygraph, survivor_fraction = 0.4,expanding_fraction = 0.1)
+```
+
+Podstawa do wykresu, pozycje komórek odpowiadaja pozymcjom na zdjeciu i wykres które komórki przeżyly.
+
+```{r pressure}
+mplot <- ggraph(mygraph,layout =  cbind(get.vertex.attribute(mygraph,"X"),get.vertex.attribute(mygraph,"Y"))) +
+  geom_edge_link()
+mplot + geom_node_point(size = 3, aes(color = expan$survivors < 100000 )) + labs(color = "col")
+```
+
+Nastepnie komorki ktore sie dziela:
+```{r}
+mplot + geom_node_point(size = 3, aes(color = as.factor(expan$origins))) + labs(color = "col") +  scale_color_brewer(palette =  "Paired")
+```
+
+I to jak wypelniaja graf:
+```{r}
+mplot + geom_node_point(size = 3, aes(color = as.factor(expan$expanded))) + labs(color = "col") +  scale_color_brewer(palette =  "Paired")
+```
+
+I ostateczny wykres z zaznaczonym gdzie sa komorki nie dzielace sie. Komórki nie dzielace sie sa "nakladane od góry" na komórki dzielace sie po ekspansji.
+Dla kazdej z poczatkowych komórek ktore przezyly wyznaczony jest odpowiedni numer( tutaj pominiete dla komorek nie dzielachych sie z powodu ograniczen kolorów) i można wylosowac dla kazdej
+```{r}
+fin_cols <- expan$final
+fin_cols[!fin_cols %in% unique(expan$expanded)] <- 100000
+mplot +  geom_node_point(size = 3, aes(color = as.factor(fin_cols))) + labs(color = "col") +  scale_color_brewer(palette =  "Paired")
+
+```
+
+

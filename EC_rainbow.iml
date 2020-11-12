@@ -4,8 +4,10 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/10092020RAINBOW EXP ii" />
+      <excludeFolder url="file://$MODULE_DIR$/cells" />
       <excludeFolder url="file://$MODULE_DIR$/model_creation/.Rproj.user" />
       <excludeFolder url="file://$MODULE_DIR$/second_wave" />
+      <excludeFolder url="file://$MODULE_DIR$/vessels" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

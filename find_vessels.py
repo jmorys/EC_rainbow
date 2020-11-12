@@ -7,6 +7,15 @@ from java.lang import System
 # vessel detection training
 from inra.ijpb import morphology
 # MorpholibJ package must be activated
+from features import TubenessProcessor
+import threading
+
+from net.haesleinhuepf.clij2 import CLIJ2
+clij2 = CLIJ2.getInstance()
+
+def run_tube(image, sigma, index, result):
+    tp = TubenessProcessor(sigma, True)
+    result[index] = tp.generateImage(image)
 
 
 def VesselFinder(channel_array, classifier_path):
@@ -16,31 +25,40 @@ def VesselFinder(channel_array, classifier_path):
     proc = image.getProcessor()
     directional_op = ImagePlus("directional_op", proc)
 
-    IJ.run(directional_op, "Directional Filtering", "type=Max operation=Opening line=30 direction=32")
-    directional_op = WindowManager.getImage("directional_op-directional")
-    directional_op.hide()
-
     tubes = range(5, 130, 12)
-    tubenesses = []
-    for tube in tubes:
-        img = ImagePlus("image", proc)
-        IJ.run(img, "Gaussian Blur...", "sigma=2")
-        IJ.run(img, "Tubeness", "sigma=" + str(tube) + " use")
-        img = WindowManager.getImage("tubeness of image")
-        img.hide()
-        img = img.getProcessor().convertToShortProcessor()
-        img = ImagePlus("img", img)
-        tubenesses.append(img)
-        IJ.run(img, "Gaussian Blur...", "sigma=2")
-        print("Tubeness" + str(tube) + "done")
 
+    img_source = ImagePlus("image", proc)
+    src = clij2.push(img_source)
+    dst = clij2.create(src)
+    sigma = 2
+    clij2.gaussianBlur2D(src, dst, sigma, sigma)
+    img_blur2 = clij2.pull(dst)
+    src.close()
+    dst.close()
+
+    print("Tubeness mt start")
+    tubenesses = [None] * len(tubes)
+    rang = range(len(tubes))
+    threads = []
+    for i in rang:
+        threads.append(threading.Thread(target=run_tube, args=(img_blur2, tubes[i], i, tubenesses)) )
+        threads[i].start()
+
+    [x.join() for x in threads]
+
+    print("Tubeness all done")
+
+    src = clij2.push(img_source)
+    dst = clij2.create(src)
     sigmas = [5, 20]
     imgsigmas = []
     for sigma in sigmas:
-        img = ImagePlus("image", proc)
-        IJ.run(img, "Gaussian Blur...", "sigma="+str(sigma))
+        clij2.gaussianBlur2D(src, dst, sigma, sigma)
+        img = clij2.pull(dst)
         imgsigmas.append(img)
     print("Gaussian Blur done")
+    src.close()
+    dst.close()
 
     variances = [5, 20]
     imgvars = []
@@ -49,6 +67,7 @@ def VesselFinder(channel_array, classifier_path):
         IJ.run(img, "Variance...", "radius="+str(variance))
         imgvars.append(img)
     print("Gaussian Blur done")
+
 
     featuresArray = FeatureStackArray(image.getStackSize())
     stack = ImageStack(image.getWidth(), image.getHeight())
@@ -82,6 +101,7 @@ def VesselFinder(channel_array, classifier_path):
     featuresArray.setEnabledFeatures(features.getEnabledFeatures())
     del stack
 
+
     wekaSegmentation = WekaSegmentation(image)
     wekaSegmentation.setFeatureStackArray(featuresArray)
     wekaSegmentation.loadClassifier(classifier_path + "\\vessel-classifier_big.model")
@@ -92,7 +112,6 @@ def VesselFinder(channel_array, classifier_path):
 
 dc = DirectoryChooser("Choose a classifier folder")
 classifier_path = dc.getDirectory()
-
 
 dc = DirectoryChooser("Choose a folder")
 folder = dc.getDirectory()

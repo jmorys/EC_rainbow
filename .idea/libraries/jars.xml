@@ -5,6 +5,8 @@
     </CLASSES>
     <JAVADOC>
       <root url="https://javadoc.scijava.org/ImageJ1/" />
+      <root url="https://javadoc.scijava.org/Fiji/" />
+      <root url="https://javadoc.scijava.org/ImageJ/" />
     </JAVADOC>
     <SOURCES>
       <root url="file://$PROJECT_DIR$/../../programy/Fiji.app/jars" />

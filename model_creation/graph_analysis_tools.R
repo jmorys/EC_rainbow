@@ -10,6 +10,8 @@ library(foreach)
 library(doParallel)
 library(data.table)
 
+# graph kernel =e^(-(1 / (2 * sigma^2))*|x|^2) sigma=1
+
 
 mix_mat <- function(atrr_list){
   colnames(atrr_list) <- c("c1", "c2", "V3")
@@ -354,6 +356,48 @@ simulate_expansion_of_fraction <- function(graph, survivor_fraction=0.3, expandi
 }
 
 
+
+
+simulate_expansion_of_fraction_2 <- function(graph, survivor_fraction=0.3, expanding_fraction=0.1){
+  nlen <- length(V(graph))
+  surv_nodes <- sample(1:nlen, ceiling(nlen*survivor_fraction))
+  survivors <- rep(100000, nlen)
+  survivors[surv_nodes] <- surv_nodes
+  ori_nodes <- sample(surv_nodes, ceiling(length(surv_nodes)*expanding_fraction))
+  oris <- rep(100000, nlen)
+  oris[ori_nodes] <- ori_nodes
+  oris <- as.factor(oris)
+  cl = makeCluster(7)
+  on.exit(stopCluster(cl))
+  clusterExport(cl, c("nlen", "graph"), envir = environment())
+  
+  E(graph)[adj(surv_nodes)]$weight <- E(graph)[adj(surv_nodes)]$weight *0.5
+  
+  
+  conn = parSapply(cl, X = ori_nodes, FUN = function(x){
+    pers <- rep(0, nlen)
+    pers[x] <- 1
+    igraph::page_rank(graph, personalized = pers, damping =  0.5, weights = NULL)$vector
+  })
+  
+  
+  expanded <- parApply(cl, conn,1, function(x){
+    order(x, decreasing = T)[1]
+  })
+  
+  
+  dead <- colMeans(distances(sub, v = ori_nodes) == Inf) == 1
+  expanded[dead] <- NA
+  final <- expanded
+  non_exp <- surv_nodes[!surv_nodes %in% ori_nodes]
+  final[non_exp] <- max(expanded) + (1:length(non_exp))
+  list(survivors = survivors, origins = oris, expanded = expanded, final = final)
+}
+
+
+
+
+
 assortativity_local <- function(graph, val, alpha = 0.2){
   graph_l <- length(V(graph))
   proceed <- graph_l == length(val)
@@ -400,7 +444,6 @@ assortativity_local_3 <- function(graph, val, alpha = 0.2){
   e2 <- igraph::get.edgelist(graph, names = F)
   e1 <- e2[,1]
   e2 <- e2[,2]
-  vals <- rep(0, graph_l)
   atrr_list <- cbind(val[e1], val[e2], rep(1, length(val[e1])))
   atrr_list <- dplyr::as_tibble(atrr_list)
   s <- mix_mat(atrr_list)
@@ -434,6 +477,41 @@ assortativity_local_3 <- function(graph, val, alpha = 0.2){
 }
 
 
+assortativity_local_par <- function(graph, val, alpha = 0.2){
+  cl = makeCluster(7)
+  on.exit(stopCluster(cl))
+  graph_l <- length(V(graph))
+  proceed <- graph_l == length(val)
+  if (!proceed) stop("length of data differs")
+  val <- as.integer(val)
+  e2 <- igraph::get.edgelist(graph, names = F)
+  e1 <- e2[,1]
+  e2 <- e2[,2]
+  atrr_list <- cbind(val[e1], val[e2], rep(1, length(val[e1])))
+  atrr_list <- dplyr::as_tibble(atrr_list)
+  s <- mix_mat(atrr_list)
+  agg <- sum(s %*% s)
+  if (agg == 1) agg <- 0.9999999999
+  #sameness bool
+  c_bool <- val[c(e1,e2)] == val[c(e2,e1)]
+  deg <- as.numeric(igraph::degree(graph)[c(e1,e2)])
+  page_list <- list()
+  assorts <- rep(0, graph_l)
+  cc <- c(e1,e2)
+  clusterExport(cl, c("graph_l", "deg", "graph", "alpha", "cc"), envir = environment())
+  assorts = parSapply(cl, X = 1:graph_l, FUN = function(x){
+    pers <- rep(0, graph_l)
+    pers[x] <- 1
+    Vpage <- igraph::page_rank(graph, personalized = pers, damping =  alpha, weights = NA)$vector
+    Vpage <- Vpage[cc]/deg
+    
+    sum(Vpage[c_bool])/sum(Vpage)
+  })
+  
+  assorts <- (assorts - agg)/(1 - agg)
+  assorts
+}
+assortativity_local_par <- compiler::cmpfun(assortativity_local_par)
 
 two_step_xgb_tune <- function(recipe, data_train){
   xgb_spec_1 <- boost_tree(

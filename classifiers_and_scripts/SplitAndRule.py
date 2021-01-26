@@ -27,7 +27,6 @@ lim2 = lim1*2
 lim3 = lim1*3
 s = 300
 
-#TODO new cell model
 pathh = "C:\\Users\\USER\\Documents\\studia\\zaklad\\EC_rainbow\\"
 segmentator = WekaSegmentation()
 segmentator.loadClassifier(pathh)

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EC_rainbow.iml" filepath="$PROJECT_DIR$/EC_rainbow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/EC_rainbow.iml" filepath="$PROJECT_DIR$/.idea/EC_rainbow.iml" />
     </modules>
   </component>
 </project>

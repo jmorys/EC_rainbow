@@ -26,7 +26,7 @@ for (k in 1:length(rangee)) {
         expp <- simulate_expansion_of_fraction(graph, survivor_fraction = rangee[j], expanding_fraction = rangee[k])$final
         set.seed(1000*k + 100*j + 10*f + i)
         cols <- sample(1:3, length(unique(expp)), replace = T)
-        tempMatrix = assortativity_local_3(graph, cols[expp], alpha = 0.3)
+        tempMatrix <- assortativity_local_3(graph, cols[expp], alpha = 0.3)
       }
     }
     assortativities_sub[[j]] <- cbind(fraction_matrix[[1]], fraction_matrix[[2]])

@@ -15,7 +15,10 @@ clij2 = CLIJ2.getInstance()
 
 def run_tube(image, sigma, index, result):
     tp = TubenessProcessor(sigma, True)
-    result[index] = tp.generateImage(image)
+    tubimg = tp.generateImage(image)
+    tubimg = tubimg.getProcessor().convertToShortProcessor()
+    tubimg = ImagePlus("img", tubimg)
+    result[index] = tubimg
 
 
 def VesselFinder(channel_array, classifier_path):
@@ -45,8 +48,8 @@ def VesselFinder(channel_array, classifier_path):
         threads[i].start()
 
     [x.join() for x in threads]
-
     print("Tubeness all done")
+    print(tubenesses)
 
     src = clij2.push(img_source)
     dst = clij2.create(src)
@@ -67,7 +70,6 @@ def VesselFinder(channel_array, classifier_path):
         IJ.run(img, "Variance...", "radius="+str(variance))
         imgvars.append(img)
     print("Gaussian Blur done")
-
 
     featuresArray = FeatureStackArray(image.getStackSize())
     stack = ImageStack(image.getWidth(), image.getHeight())
@@ -132,7 +134,7 @@ d1 = dimensions[0]
 lim1 = dimensions[1] // 4
 lim2 = lim1*2
 lim3 = lim1*3
-s = 300
+s = 200
 
 ranges = [[0, ((lim1+s)*d1)], [(lim1-s)*d1, ((lim2+s)*d1)],
           [(lim2-s)*d1, (lim3+s)*d1], [(lim3-s) * d1, dimensions[1] * d1]]
@@ -144,7 +146,7 @@ for i in range(len(channels)):
     cm = channel.getProcessor().getColorModel()
     for r in range(len(ranges)):
         frag_pix = pix[ranges[r][0]:ranges[r][1]]
-        channel_frags.append(ImagePlus("Random", ShortProcessor(d1, (ranges[r][1]-ranges[r][0])/d1, frag_pix, cm)))
+        channel_frags.append(ImagePlus("Frag", ShortProcessor(d1, (ranges[r][1]-ranges[r][0])/d1, frag_pix, cm)))
     image_frags.append(channel_frags)
 out_frags = []
 for r in range(len(ranges)):

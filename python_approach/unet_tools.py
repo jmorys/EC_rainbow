@@ -8,11 +8,12 @@ from torchvision import transforms as T
 from skimage import transform
 from run_IS.smooth_tiled_predictions import predict_img_with_smooth_windowing
 from run_IS.network import U_Net
-from split_image import split, join_img
+from python_approach.split_image import split, join_img
 import tqdm
 from time import sleep
 import cv2
 import gc
+
 
 def find_newest(path, end=".pkl"):
     files = (os.listdir(path))

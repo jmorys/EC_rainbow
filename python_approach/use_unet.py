@@ -33,8 +33,14 @@ test = img_as_ubyte(test[:, :, 3])
 smooth_umap_predict_vessels(test, unet, os.path.join(r, file, "vessels_mask.tif"), transf)
 
 
-
-
+r = r"C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cells"
+targ = r"C:\Users\USER\Documents\studia\zaklad\EC_rainbow\test_voronoi"
+files = os.listdir(r)
+files = [x for x in files if x.startswith("test_image") & x.endswith(".tif")]
+for file in files:
+    img = io.imread(os.path.join(r, file), plugin="tifffile")
+    img = img_as_ubyte(img[:, :, 3])
+    smooth_umap_predict_vessels(img, unet, os.path.join(targ, file), transf)
 
 
 

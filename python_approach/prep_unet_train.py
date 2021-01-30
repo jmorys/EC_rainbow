@@ -18,7 +18,6 @@ def read_and_split(path, ltrain=1, lgt=1, rescale=None):
     return dat, lab
 
 
-
 def train_Unet(path, ltrain=1, lgt=1, rescale=None):
     os.chdir(path)
     files = os.listdir()

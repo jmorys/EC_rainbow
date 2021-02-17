@@ -2,7 +2,6 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/ANCIS-Pytorch" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/python_approach" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/run_IS" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/10092020RAINBOW EXP ii" />

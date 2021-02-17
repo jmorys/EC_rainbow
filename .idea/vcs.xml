@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/ANCIS-Pytorch" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/AdelaiDet" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/detectron2" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/detectron2/AdelaiDet" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/dwt" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/harmonic" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/harmonic/harmonic" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/run_IS" vcs="Git" />
+    <mapping directory="" vcs="Git" />
   </component>
 </project>

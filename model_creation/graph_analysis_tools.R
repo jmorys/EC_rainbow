@@ -16,9 +16,9 @@ library(data.table)
 mix_mat <- function(atrr_list){
   colnames(atrr_list) <- c("c1", "c2", "V3")
   mmax <- max(atrr_list[,1:2])
-  fillingframe <- cbind(c1 = 1:mmax, c2 = 1:mmax, V3 = rep(0,mmax))
-  fillingframe <- as_tibble(fillingframe)
-  atrr_list <- bind_rows(atrr_list, fillingframe)
+  fillingframe <- cbind(c1 = 1:mmax, c2 = 1:mmax, V3 = rep(0, mmax))
+  fillingframe <- tibble::as_tibble(fillingframe)
+  atrr_list <- dplyr::bind_rows(atrr_list, fillingframe)
   sum_list <- atrr_list %>% dplyr::group_by(c1,c2) %>% dplyr::summarise(sum = sum(V3), .groups = "drop" )
   mymat <- tidyr::spread(sum_list, c1, sum)
   s <- as.matrix(mymat[,-1])
@@ -357,21 +357,22 @@ simulate_expansion_of_fraction <- function(graph, survivor_fraction=0.3, expandi
 
 
 
-
 simulate_expansion_of_fraction_2 <- function(graph, survivor_fraction=0.3, expanding_fraction=0.1){
   nlen <- length(V(graph))
   surv_nodes <- sample(1:nlen, ceiling(nlen*survivor_fraction))
-  survivors <- rep(100000, nlen)
+  survivors <- rep(NA, nlen)
   survivors[surv_nodes] <- surv_nodes
   ori_nodes <- sample(surv_nodes, ceiling(length(surv_nodes)*expanding_fraction))
-  oris <- rep(100000, nlen)
+  oris <- rep(NA, nlen)
   oris[ori_nodes] <- ori_nodes
   oris <- as.factor(oris)
   cl = makeCluster(7)
   on.exit(stopCluster(cl))
   clusterExport(cl, c("nlen", "graph"), envir = environment())
   
-  E(graph)[adj(surv_nodes)]$weight <- E(graph)[adj(surv_nodes)]$weight *0.5
+  
+  non_exp <- surv_nodes[!surv_nodes %in% ori_nodes]
+  E(graph)[incident(graph, non_exp)]$weight <- E(graph)[incident(graph, non_exp)]$weight * 0.5
   
   
   conn = parSapply(cl, X = ori_nodes, FUN = function(x){
@@ -386,95 +387,51 @@ simulate_expansion_of_fraction_2 <- function(graph, survivor_fraction=0.3, expan
   })
   
   
-  dead <- colMeans(distances(sub, v = ori_nodes) == Inf) == 1
+  dead <- colMeans(distances(graph, v = sort(ori_nodes)) == Inf) == 1
   expanded[dead] <- NA
   final <- expanded
-  non_exp <- surv_nodes[!surv_nodes %in% ori_nodes]
-  final[non_exp] <- max(expanded) + (1:length(non_exp))
+  final[non_exp] <- max(expanded, na.rm = T) + (1:length(non_exp))
   list(survivors = survivors, origins = oris, expanded = expanded, final = final)
 }
 
 
 
 
-
-assortativity_local <- function(graph, val, alpha = 0.2){
-  graph_l <- length(V(graph))
-  proceed <- graph_l == length(val)
-  if (!proceed) stop("length of data differs")
-  val <- as.integer(val)
-  e2 <- igraph::get.edgelist(graph, names = F)
-  e1 <- e2[,1]
-  e2 <- e2[,2]
-  e <- c(e1,e2)
-  atrr_list <- cbind(val[e1], val[e2], rep(1, length(val[e1])))
-  atrr_list <- as_tibble(atrr_list)
-  s <- mix_mat(atrr_list)
-  agg <- sum(s %*% s)
-  if (agg == 1) agg <- 0.9999999999
+simulate_expansion_of_fraction_cheap <- function(graph, survivor_fraction=0.3, expanding_fraction=0.1, cols){
+  nlen <- length(V(graph))
+  surv_nodes <- sample(1:nlen, ceiling(nlen*survivor_fraction))
+  survivors <- rep(NA, nlen)
+  survivors[surv_nodes] <- surv_nodes
+  ori_nodes <- sample(surv_nodes, ceiling(length(surv_nodes)*expanding_fraction))
+  oris <- rep(NA, nlen)
+  oris[ori_nodes] <- ori_nodes
+  oris <- cols[oris]
   
-  page_list <- list()
-  for (i in 1:graph_l) {
-    pers <- rep(0, graph_l)
-    pers[i] <- 1
-    Vpage <- igraph::page_rank(graph, personalized = pers, damping =  alpha, weights = NA)$vector
-    page_list[[i]] <- Vpage[e]
-  }
-  page_vec <- unlist(page_list)
-  col1 <- val[e]
-  col2 <- val[c(e2,e1)]
-  deg <- as.numeric(igraph::degree(graph)[e])
-  assort_data <- data.table(vertex = rep(1:graph_l, each = length(col1)),
-                            C1 = rep(col1, graph_l),
-                            C2 = rep(col2, graph_l),
-                            val = page_vec/rep(deg, graph_l)
-  )
-  assorts <- assort_data[C1 == C2, sum(val), by = vertex]$V1/assort_data[, sum(val), by = vertex]$V1
-  assorts <- (assorts - agg)/(1 - agg)
-  assorts
-}
-
-
-
-assortativity_local_3 <- function(graph, val, alpha = 0.2){
-  graph_l <- length(V(graph))
-  proceed <- graph_l == length(val)
-  if (!proceed) stop("length of data differs")
-  val <- as.integer(val)
-  e2 <- igraph::get.edgelist(graph, names = F)
-  e1 <- e2[,1]
-  e2 <- e2[,2]
-  atrr_list <- cbind(val[e1], val[e2], rep(1, length(val[e1])))
-  atrr_list <- dplyr::as_tibble(atrr_list)
-  s <- mix_mat(atrr_list)
-  agg <- sum(s %*% s)
-  if (agg == 1) agg <- 0.9999999999
+  non_exp <- surv_nodes[!surv_nodes %in% ori_nodes]
+  E(graph)[incident(graph, non_exp)]$weight <- E(graph)[incident(graph, non_exp)]$weight * 0.5
   
-  page_list <- list()
-  for (i in 1:graph_l) {
-    pers <- rep(0, graph_l)
-    pers[i] <- 1
-    Vpage <- igraph::page_rank(graph, personalized = pers, damping =  alpha, weights = NA)$vector
-    page_list[[i]] <- Vpage[c(e1,e2)]
-  }
-  page_vec <- unlist(page_list)
-  c_bool <- val[c(e1,e2)] == val[c(e2,e1)]
-  deg <- as.numeric(igraph::degree(graph)[c(e1,e2)])
-  assort_data <- dplyr::tibble(vertex = rep(1:graph_l, each = length(c_bool)),
-                               c_bool = rep(c_bool, graph_l),
-                               val = page_vec/rep(deg, graph_l)
-  )
-  remove(page_vec)
-  assort_data <- assort_data %>% dplyr::group_by(vertex)
-  egg <- assort_data %>% filter(c_bool) %>%
-    dplyr::summarise(value = sum(val), .groups = "drop" ) %>% dplyr::pull(value)
-  norm <- assort_data %>%
-    dplyr::summarise(value = sum(val), .groups = "drop" ) %>% dplyr::pull(value)
-  remove(assort_data)
-  assorts <- egg/norm
-  assorts <- (assorts - agg)/(1 - agg)
-  assorts
+  
+  conn = sapply(X = sort(na.exclude(unique(oris))), FUN = function(x){
+    pers <- rep(0, nlen)
+    pers[oris == x] <- 1
+    igraph::page_rank(graph, personalized = pers, damping =  0.5, weights = NULL)$vector
+  })
+  
+  
+  expanded <- apply(conn, 1, function(x){
+    order(x, decreasing = T)[1]
+  })
+  
+  
+  dead <- colMeans(distances(graph, v = ori_nodes) == Inf) == 1
+  expanded[dead] <- NA
+  final <- expanded
+  final[non_exp] <- cols[max(expanded, na.rm = T) + (1:length(non_exp))]
+  list(survivors = survivors, origins = oris, expanded = expanded, final = final)
 }
+  
+
+
 
 
 assortativity_local_par <- function(graph, val, alpha = 0.2){
@@ -488,6 +445,7 @@ assortativity_local_par <- function(graph, val, alpha = 0.2){
   e1 <- e2[,1]
   e2 <- e2[,2]
   atrr_list <- cbind(val[e1], val[e2], rep(1, length(val[e1])))
+  colnames(atrr_list) <- c("c1", "c2", "V3")
   atrr_list <- dplyr::as_tibble(atrr_list)
   s <- mix_mat(atrr_list)
   agg <- sum(s %*% s)
@@ -495,16 +453,15 @@ assortativity_local_par <- function(graph, val, alpha = 0.2){
   #sameness bool
   c_bool <- val[c(e1,e2)] == val[c(e2,e1)]
   deg <- as.numeric(igraph::degree(graph)[c(e1,e2)])
-  page_list <- list()
   assorts <- rep(0, graph_l)
   cc <- c(e1,e2)
   clusterExport(cl, c("graph_l", "deg", "graph", "alpha", "cc"), envir = environment())
   assorts = parSapply(cl, X = 1:graph_l, FUN = function(x){
     pers <- rep(0, graph_l)
     pers[x] <- 1
-    Vpage <- igraph::page_rank(graph, personalized = pers, damping =  alpha, weights = NA)$vector
+    Vpage <- igraph::page_rank(graph, personalized = pers, damping =  alpha, weights = NULL)$vector
     Vpage <- Vpage[cc]/deg
-    
+    Vpage[Vpage < 0] <- 0
     sum(Vpage[c_bool])/sum(Vpage)
   })
   
@@ -512,6 +469,59 @@ assortativity_local_par <- function(graph, val, alpha = 0.2){
   assorts
 }
 assortativity_local_par <- compiler::cmpfun(assortativity_local_par)
+
+
+
+
+
+fast_assorts_p_1 <- function(graph, alpha = 0.4){
+  cl = makeCluster(7)
+  on.exit(stopCluster(cl))
+  graph_l <- length(V(graph))
+  e2 <- igraph::get.edgelist(graph, names = F)
+  e1 <- e2[,1]
+  e2 <- e2[,2]
+  cc <- c(e1, e2)
+  deg <- as.numeric(igraph::degree(graph)[c(e1,e2)])
+  clusterExport(cl, c("graph_l", "deg", "graph", "alpha", "cc"), envir = environment())
+  assorts_ori = parSapply(cl, X = 1:graph_l, FUN = function(x){
+    pers <- rep(0, graph_l)
+    pers[x] <- 1
+    Vpage <- igraph::page_rank(graph, personalized = pers, damping =  alpha, weights = NULL)$vector
+    Vpage <- Vpage[cc]/deg
+    Vpage
+  })
+  assorts_ori[assorts_ori < 0] <- 0
+  return(list(assorts_ori, e1, e2))
+}
+
+fast_assorts_p_1 <- compiler::cmpfun(fast_assorts_p_1)
+
+
+
+fast_assorts_p_2 <- function(val, assorts, e1, e2){
+  val <- as.integer(val)
+  atrr_list <- cbind(val[e1], val[e2], rep(1, length(val[e1])))
+  colnames(atrr_list) <- c("c1", "c2", "V3")
+  atrr_list <- dplyr::as_tibble(atrr_list)
+  s <- mix_mat(atrr_list)
+  agg <- sum(s %*% s)
+  if (agg == 1) agg <- 0.9999999999
+  #sameness bool
+  c_bool <- val[c(e1,e2)] == val[c(e2,e1)]
+  c_bool <- c_bool*1
+  assorts <- colSums(assorts*c_bool)/colSums(assorts)
+  assorts <- (assorts - agg)/(1 - agg)
+  assorts
+}
+
+fast_assorts_p_2 <- compiler::cmpfun(fast_assorts_p_2)
+
+
+
+
+
+
 
 two_step_xgb_tune <- function(recipe, data_train){
   xgb_spec_1 <- boost_tree(

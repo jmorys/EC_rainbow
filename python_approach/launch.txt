@@ -1,0 +1,45 @@
+
+
+python main.py --model_type U_Net --image_size 256 ^
+ --train_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\vessels\unet\train ^
+ --valid_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\vessels\unet\validate ^
+ --test_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\vessels\unet\test ^
+ --img_ch 1 --num_workers 3 --batch_size 2 --num_epochs 150 --augmentation_prob 0.5 ^
+ --model_path .\models\vessels --result_path .\models\vessels --lr 0.005
+
+
+python main.py --model_type U_Net --image_size 256 ^
+ --train_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cells\train ^
+ --valid_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cells\validate ^
+ --test_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cells\test ^
+ --img_ch 4 --num_workers 3 --batch_size 2 --num_epochs 100 --output_ch 3 --augmentation_prob 0.5 ^
+ --model_path .\models\cells --result_path .\models\cells --lr 0.005
+
+
+python main.py --model_type U_Net --image_size 256 ^
+ --train_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cell_edges\train ^
+ --valid_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cell_edges\validate ^
+ --test_path C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cell_edges\test ^
+ --img_ch 4 --num_workers 3 --batch_size 1 --num_epochs 100 --output_ch 3 --augmentation_prob 0.5 ^
+ --model_path .\models\edges
+
+
+
+
+
+
+
+python call_unet.py --input D:\EC_rainbow_data\input_images ^
+ --model_location C:\Users\USER\Documents\studia\zaklad\EC_rainbow\run_IS\models\cells ^
+ --out_location D:\EC_rainbow_data\segment_cells --segment cells
+
+
+python call_unet.py --input D:\EC_rainbow_data\input_images ^
+ --model_location C:\Users\USER\Documents\studia\zaklad\EC_rainbow\run_IS\models\vessels ^
+ --out_location D:\EC_rainbow_data\segment_vessels --segment vessels
+
+
+python call_graph_creation.py --original_images D:\EC_rainbow_data\input_images ^
+ --cells_input D:\EC_rainbow_data\segment_cells ^
+ --vessels_input D:\EC_rainbow_data\segment_vessels ^
+ --out_location D:\EC_rainbow_data\data_for_graphs

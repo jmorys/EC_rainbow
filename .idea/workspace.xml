@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4cf15f4f-486f-4b31-a303-bd9e9c365c45" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/call_graph_creation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/EC_rainbow.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EC_rainbow.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classifiers_and_scripts/SplitAndRule.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/classifiers_and_scripts/find_vessels.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/classifiers_and_scripts/find_vessels_create_classifier_mp_big.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/classifiers_and_scripts/find_vessels_create_classifier_scaled.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/classifiers_and_scripts/segment_cells_create_classifier.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_creation/.Rhistory" beforeDir="false" afterPath="$PROJECT_DIR$/model_creation/.Rhistory" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_creation/creating_predictions_models.R" beforeDir="false" afterPath="$PROJECT_DIR$/model_creation/creating_predictions_models.R" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_creation/graph_analysis_tools.R" beforeDir="false" afterPath="$PROJECT_DIR$/model_creation/graph_analysis_tools.R" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protokół.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python_approach/cell_instancing/watershed.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_approach/cell_instancing/watershed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python_approach/watershed_tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_approach/watershed_tools.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/run_IS" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="JupyterTrust" id="67036432-b030-4651-8d25-31940ced06c1" />
+  <component name="ProjectId" id="1kG2ThLH55fKcGRmk1qXei3La3J" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/python_approach/watershed_tools.py" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/python_approach/watershed_tools.py" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\USER\Documents\studia\zaklad\EC_rainbow\python_approach\cell_instancing" />
+      <recent name="D:\EC_rainbow_data" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\USER\Documents\studia\zaklad\EC_rainbow\python_approach" />
+      <recent name="C:\Users\USER\Documents\studia\zaklad\EC_rainbow" />
+      <recent name="C:\Users\USER\Documents\studia\zaklad\EC_rainbow\harmonic\harmonic" />
+      <recent name="C:\Users\USER\Documents\studia\zaklad\EC_rainbow\harmonic" />
+      <recent name="C:\Users\USER\Documents\studia\zaklad\EC_rainbow\harmonic\harmonic_seg" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.unet_tools">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="EC_rainbow" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="smooth_tiled_predictions" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EC_rainbow" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ANCIS-Pytorch" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/run_IS/smooth_tiled_predictions.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="unet_tools" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EC_rainbow" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python_approach" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python_approach/unet_tools.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="use_unet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EC_rainbow" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python_approach" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python_approach/use_unet.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="watershed" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EC_rainbow" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python_approach/cell_instancing" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python_approach/cell_instancing/watershed.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.watershed" />
+        <item itemvalue="Python.use_unet" />
+        <item itemvalue="Python.unet_tools" />
+        <item itemvalue="Python.smooth_tiled_predictions" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4cf15f4f-486f-4b31-a303-bd9e9c365c45" name="Default Changelist" comment="" />
+      <created>1605312616458</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605312616458</updated>
+      <workItem from="1605312628303" duration="10750000" />
+      <workItem from="1605386867910" duration="2966000" />
+      <workItem from="1605455686343" duration="3885000" />
+      <workItem from="1605461532163" duration="54000" />
+      <workItem from="1605461594914" duration="7963000" />
+      <workItem from="1605480788930" duration="34681000" />
+      <workItem from="1605554242762" duration="15018000" />
+      <workItem from="1605598634719" duration="15000" />
+      <workItem from="1605604017790" duration="17655000" />
+      <workItem from="1605660334523" duration="46851000" />
+      <workItem from="1605776146732" duration="39155000" />
+      <workItem from="1605827490243" duration="6640000" />
+      <workItem from="1605880612512" duration="29645000" />
+      <workItem from="1606058793870" duration="1472000" />
+      <workItem from="1606156512435" duration="10378000" />
+      <workItem from="1606171778964" duration="5675000" />
+      <workItem from="1606183346574" duration="604000" />
+      <workItem from="1606234349931" duration="9249000" />
+      <workItem from="1606350398918" duration="15372000" />
+      <workItem from="1606509495670" duration="12869000" />
+      <workItem from="1606772956511" duration="8184000" />
+      <workItem from="1606927140794" duration="4222000" />
+      <workItem from="1607090585989" duration="13729000" />
+      <workItem from="1607275166280" duration="5287000" />
+      <workItem from="1607359381210" duration="13000" />
+      <workItem from="1608730396201" duration="2645000" />
+      <workItem from="1608772923254" duration="5012000" />
+      <workItem from="1609022564781" duration="20650000" />
+      <workItem from="1609096920452" duration="3688000" />
+      <workItem from="1609273951536" duration="53000" />
+      <workItem from="1609443197004" duration="6657000" />
+      <workItem from="1609522871162" duration="3067000" />
+      <workItem from="1609525958865" duration="16045000" />
+      <workItem from="1609944800263" duration="1024000" />
+      <workItem from="1609946912131" duration="41493000" />
+      <workItem from="1610119158314" duration="968000" />
+      <workItem from="1610126931030" duration="10300000" />
+      <workItem from="1610161173887" duration="492000" />
+      <workItem from="1610199730295" duration="3640000" />
+      <workItem from="1610208384758" duration="64920000" />
+      <workItem from="1610371381733" duration="2051000" />
+      <workItem from="1610387099907" duration="11302000" />
+      <workItem from="1610409137929" duration="580000" />
+      <workItem from="1610414143817" duration="27524000" />
+      <workItem from="1610501878223" duration="11241000" />
+      <workItem from="1610513657537" duration="5876000" />
+      <workItem from="1610547077607" duration="16707000" />
+      <workItem from="1610583172717" duration="20207000" />
+      <workItem from="1610734672246" duration="1329000" />
+      <workItem from="1610736248768" duration="13915000" />
+      <workItem from="1610773586470" duration="1048000" />
+      <workItem from="1610776235097" duration="24000" />
+      <workItem from="1610776612324" duration="591000" />
+      <workItem from="1610803611250" duration="3413000" />
+      <workItem from="1610814383591" duration="11660000" />
+      <workItem from="1610852967503" duration="3563000" />
+      <workItem from="1610898694460" duration="1646000" />
+      <workItem from="1610979563555" duration="672000" />
+      <workItem from="1610985981991" duration="636000" />
+      <workItem from="1610994968071" duration="8480000" />
+      <workItem from="1611006493582" duration="1215000" />
+      <workItem from="1611011949278" duration="2032000" />
+      <workItem from="1611014140312" duration="1165000" />
+      <workItem from="1611048334178" duration="9173000" />
+      <workItem from="1611069112463" duration="21236000" />
+      <workItem from="1611157276543" duration="9387000" />
+      <workItem from="1611173462944" duration="70781000" />
+      <workItem from="1611368106262" duration="3030000" />
+      <workItem from="1611512649730" duration="19331000" />
+      <workItem from="1611592651721" duration="8008000" />
+      <workItem from="1611607376567" duration="826000" />
+      <workItem from="1611608423683" duration="8576000" />
+      <workItem from="1611658807002" duration="13058000" />
+      <workItem from="1611772001521" duration="3926000" />
+      <workItem from="1611782078408" duration="14984000" />
+      <workItem from="1611919153241" duration="36417000" />
+      <workItem from="1612015982605" duration="4326000" />
+      <workItem from="1612032894618" duration="6595000" />
+      <workItem from="1612429668649" duration="14000" />
+      <workItem from="1613540616379" duration="6482000" />
+      <workItem from="1613578491859" duration="87000" />
+    </task>
+    <task id="LOCAL-00001" summary="up">
+      <created>1611662420616</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1611662420616</updated>
+    </task>
+    <task id="LOCAL-00002" summary="up">
+      <created>1611965071147</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1611965071147</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="up" />
+    <option name="LAST_COMMIT_MESSAGE" value="up" />
+  </component>
+</project>

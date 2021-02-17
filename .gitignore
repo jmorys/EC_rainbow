@@ -4,5 +4,7 @@
 /vessels/
 /cells/
 .Rproj.user
-/cells/
 /cell_edges/
+/ANCIS-Pytorch/seg0/0_0.4837_model.pth
+/test_voronoi/
+/run_IS/models/

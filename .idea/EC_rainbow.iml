@@ -10,6 +10,13 @@
       <excludeFolder url="file://$MODULE_DIR$/cells" />
       <excludeFolder url="file://$MODULE_DIR$/second_wave" />
       <excludeFolder url="file://$MODULE_DIR$/vessels" />
+      <excludeFolder url="file://$MODULE_DIR$/ANCIS-Pytorch/dec0" />
+      <excludeFolder url="file://$MODULE_DIR$/ANCIS-Pytorch/dec1" />
+      <excludeFolder url="file://$MODULE_DIR$/ANCIS-Pytorch/seg0" />
+      <excludeFolder url="file://$MODULE_DIR$/ANCIS-Pytorch/seg_weights" />
+      <excludeFolder url="file://$MODULE_DIR$/test_voronoi" />
+      <excludeFolder url="file://$MODULE_DIR$/model_creation/.Rproj.user" />
+      <excludeFolder url="file://$MODULE_DIR$/run_IS/models/edges" />
     </content>
     <content url="file://D:/EC_rainbow_data">
       <excludeFolder url="file://D:/EC_rainbow_data/10092020RAINBOW EXP ii" />

@@ -10,34 +10,66 @@ import tqdm
 import skfmm
 
 # test
-r = r"C:\Users\USER\Documents\studia\zaklad\EC_rainbow\test_voronoi"
-file = r"test_img.tif"
-img = io.imread(os.path.join(r, file))
+r = r"D:\EC_rainbow_data\10092020RAINBOW EXP ii\Rainbow_d21_AE0088_2_final_2020_09_07__09_41_03 zeiss_Mip"
+file = r"vessels_mask.tif"
+vessels = io.imread(os.path.join(r, file))
+file = r"cells_pred.tif"
+cells = io.imread(os.path.join(r, file))
+img = np.concatenate((cells, vessels[:, :, np.newaxis]), axis=-1)
+del cells, vessels
 
 sato1 = CreateSato(range(4, 17, 4))
 sato2 = CreateSato([1, 3])
 relabeled, cell_params, edge_params = get_graph(img, sato1=sato1, sato2=sato2)
 
 
+np.savetxt(os.path.join(r, "cell_parametres.csv"), cell_params, delimiter=",")
+np.savetxt(os.path.join(r, "edge_parametres.csv"), edge_params, delimiter=",")
+io.imsave(os.path.join(r, "relabeled.tif"), img_as_float32(relabeled), plugin="tifffile")
 
 
 
 
 
 
+def evaluation(vals):
+    prec = (vals[..., 0] / (vals[..., 0] + vals[..., 1]))
+    prec = prec.min(axis=0).sum()
+    rec = (vals[..., 0] / vals[..., 2]).sum()
+    rec= rec.min(axis=0).sum()
+    return rec, prec
 
-#
-#
+
+
+sato1 = CreateSato(range(4, 17, 4))
+sato2 = CreateSato([1, 3])
+params = [1, 0.35, 3, 0.6, 0.6]
+vals = image_recall(sato1, sato2, pred_folder=r"C:\Users\USER\Documents\studia\zaklad\EC_rainbow\test_voronoi",
+             GT_folder=r"C:\Users\USER\Documents\studia\zaklad\EC_rainbow\cells",
+             params=params)
+results_sum = vals
+
+prec = (results_sum[..., 0] / (results_sum[..., 0] + results_sum[..., 1]))
+rec = (results_sum[..., 0] / results_sum[..., 2])
+overlap_thresholds = np.linspace(0.1, 0.9, 9)
+plt.plot(overlap_thresholds, rec[0, :], label="1")
+plt.plot(overlap_thresholds, rec[1, :], label="2")
+plt.plot(overlap_thresholds, rec[2, :], label="3")
+plt.legend()
+plt.show()
+
+plt.plot(overlap_thresholds, prec[0, :], label="1")
+plt.plot(overlap_thresholds, prec[1, :], label="2")
+plt.plot(overlap_thresholds, prec[2, :], label="3")
+plt.legend()
+plt.show()
+
+
 # # test_AP
 # # optimal : m1=0.6, m2=0.6, a=1, b=0.35, c=3
 #
 #
-# def evaluation(vals):
-#     prec = (vals[..., 0] / (vals[..., 0] + vals[..., 1]))
-#     prec = prec.min(axis=0).sum()
-#     rec = (vals[..., 0] / vals[..., 2]).sum()
-#     rec= rec.min(axis=0).sum()
-#     return rec, prec
+
 #
 # sato1 = CreateSato(range(4, 17, 4))
 # sato2 = CreateSato([1, 3])

@@ -1,18 +1,11 @@
 import os
-import matplotlib.pyplot as plt
 from skimage import io, img_as_float32, segmentation, filters, morphology, measure
 from skimage.future import graph
-import sys
-import re
-import random
-import numpy as np
-from split_image import split, join_img
 from scipy import ndimage as ndi
 import numpy as np
 import skfmm
 from itertools import chain
 import multiprocessing as mp
-from skimage.measure import regionprops
 
 
 def get_params(dist_map, label_map, label):
@@ -27,7 +20,7 @@ class DistanceMeasurer:
         self.regions = division_regions
 
     def __len__(self):
-        return len(adjlist)
+        return len(self.adjlist)
 
     def get_boxes(self, nodes):
         boxes = [self.regions[node - 1].bbox for node in nodes]
@@ -44,7 +37,7 @@ class DistanceMeasurer:
         crop_phi = np.ones_like(crop)
         crop_phi[crop == nodes[0]] = 0
         dist_map = skfmm.distance(crop_phi)
-        params = [[nodes[0], label, get_params(dist_map, crop, label)] for label in nodes[1:]]
+        params = [[nodes[0], label] + list(get_params(dist_map, crop, label)) for label in nodes[1:]]
         return params
 
 
@@ -54,6 +47,10 @@ class CreateSato:
         self.black = black_ridges
 
     def __call__(self, img):
+        """
+        :param img: input image
+        :returns tubular features image
+        """
         if len(img.shape) == 3:
             layers = img.shape[2]
         else:
@@ -67,6 +64,12 @@ class CreateSato:
 
 
 def segment_image(cells_img, sato1, sato2, a=1., b=1., c=1., m1=1., m2=1.):
+    """
+    :param cells_img: cell prediction confidence image
+    :param sato1, sato2: CreateSato objects
+    :param a, b, c, m1, m2: fine tuning parameters
+    :returns thresholded image with layers for colors
+    """
     cells_img = img_as_float32(cells_img)
     gauss_downstream = filters.gaussian(cells_img, multichannel=True, sigma=2).astype(np.float32)
     threshed1 = gauss_downstream > 0.5
@@ -76,11 +79,13 @@ def segment_image(cells_img, sato1, sato2, a=1., b=1., c=1., m1=1., m2=1.):
     gauss_energy = filters.gaussian(cells_img, multichannel=True, sigma=6).astype(np.float32)
 
     vesses = sato1(gauss_downstream)
-    vesses_prim = sato2(gauss_downstream)
     maxima_vals = vesses*m1 + gauss_energy*m2
     disc = morphology.disk(4)
-    maxes = morphology.h_maxima(maxima_vals, h=0.05, selem=disc[:, :, np.newaxis])
+    maxes = np.zeros(vesses.shape, dtype=np.uint8)
+    for i in range(3):
+        maxes[..., i] = morphology.h_maxima(maxima_vals[..., i], h=0.05, selem=disc).astype(np.float16)
     del maxima_vals
+    vesses_prim = sato2(gauss_downstream)
     energy = -(a*vesses + b*gauss_energy - c*vesses_prim)
     segmented_cells = np.zeros(cells_img.shape, dtype=np.uint32)
     for i in range(3):
@@ -181,6 +186,20 @@ def image_recall(sato1, sato2, pred_folder=r"C:\Users\USER\Documents\studia\zakl
 
 
 def get_graph(img, sato1, sato2, m1=0.6, m2=0.6, a=1., b=0.35, c=3.):
+    """
+    :param img: predictions, 4-layer image
+    :param sato1: CreateSato object, cell center detection
+    :param sato2: CreateSato object, cell perimeter detection
+    :param m1: finding maxima, sato1 multiplier
+    :param m2: finding maxima, gauss multiplier
+    :param a: energy computation, sato1 multiplier
+    :param b: energy computation, gauss multiplier
+    :param c: energy computation, sato2 multiplier
+    :return: relabeled - instance segmentation;
+            cell_params - parameters of cell instances: cell number, cell colour,
+            centroid y, centroid x, area, eccentricity;
+            edge_params - origin cell, destination cell, distance:, min, mean, max, std
+    """
     cells_img = img[..., :3]
     vessels = img_as_float32(img[..., 3])
     vessels = vessels < 0.5
@@ -188,12 +207,12 @@ def get_graph(img, sato1, sato2, m1=0.6, m2=0.6, a=1., b=0.35, c=3.):
     # cell segmentation
     threshed, segmented_cells = segment_image(cells_img, sato1, sato2, m1=m1, m2=m2,
                                               a=a, b=b, c=c)
+    del cells_img
     segmented_cells[threshed.sum(axis=-1) > 1, :] = 0
     max_unique = segmented_cells.max()
-    unique_cells = (segmented_cells.argmax(axis=-1) * max_unique) + segmented_cells.max(axis=-1)
-
+    masked_cells = (segmented_cells.argmax(axis=-1) * max_unique) + segmented_cells.max(axis=-1)
+    del segmented_cells
     # relabeling
-    masked_cells = unique_cells.copy()
     masked_cells[vessels] = 0
     relabeled = masked_cells.copy()
     for new, old in enumerate(np.unique(masked_cells)):
@@ -205,9 +224,10 @@ def get_graph(img, sato1, sato2, m1=0.6, m2=0.6, a=1., b=0.35, c=3.):
     thisphi[relabeled > 0] = 0
     thisphi = np.ma.MaskedArray(thisphi, vessels)
     distances = skfmm.distance(phi=thisphi)
+    del thisphi
     division = segmentation.watershed(distances, relabeled, mask=vessels * (-1) + 1)
     division[vessels] = 0
-
+    del distances
 
     # create graph
     edges = filters.sobel(division)
@@ -218,10 +238,10 @@ def get_graph(img, sato1, sato2, m1=0.6, m2=0.6, a=1., b=0.35, c=3.):
     # prepare to measure cell distances
     nodes = list(np.sort(list(g.nodes)))
     adjlist = [[x for x in g.neighbors(node)] for node in nodes]
-    regions = regionprops(division)
+    regions = measure.regionprops(division)
+    del division
     relabeled = np.ma.MaskedArray(relabeled, vessels)
     measure_dist = DistanceMeasurer(relabeled, adjlist, regions)
-
     # measure cell distances
     pool = mp.Pool(mp.cpu_count())
     results = pool.map_async(measure_dist, range(len(adjlist)))
@@ -230,7 +250,7 @@ def get_graph(img, sato1, sato2, m1=0.6, m2=0.6, a=1., b=0.35, c=3.):
     pool.close()
 
     # measure cell properties
-    labeled_regions = regionprops(relabeled)
+    labeled_regions = measure.regionprops(relabeled)
     color_map = threshed.argmax(axis=-1)
     color_map[threshed.max(axis=-1)] += 1
     # [nr, col, y, x, area, eccentricity]
@@ -242,5 +262,3 @@ def get_graph(img, sato1, sato2, m1=0.6, m2=0.6, a=1., b=0.35, c=3.):
         cell_params[i, :] = res
 
     return relabeled, cell_params, edge_params
-
-
